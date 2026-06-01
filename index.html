@@ -1,0 +1,2404 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Правозащитный пульс Кавказа</title>
+  <style>
+    :root {
+      --bg: #d8d8d8;
+      --panel: #eeeeee;
+      --panel-strong: #f7f7f7;
+      --ink: #1d1d1d;
+      --muted: #666;
+      --muted-2: #8a8a8a;
+      --line: rgba(0, 0, 0, .13);
+      --line-strong: rgba(0, 0, 0, .25);
+      --accent: #c9252c;
+      --accent-dark: #171717;
+      --official: #222;
+      --verify: #b26a00;
+      --sensitive: #a20f1b;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255,255,255,.65), transparent 32rem),
+        linear-gradient(180deg, #d2d2d2 0%, var(--bg) 45%, #cfcfcf 100%);
+      line-height: 1.45;
+    }
+
+    a { color: inherit; text-decoration-thickness: .08em; text-underline-offset: .18em; }
+    a:hover { color: var(--accent); }
+
+    .page {
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 48px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 14px;
+    }
+
+    .hero-main,
+    .hero-note,
+    .panel,
+    .filter-panel,
+    .kpi-card {
+      background: rgba(245,245,245,.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-main { padding: 24px 26px; position: relative; overflow: hidden; }
+    .hero-main::before {
+      content: "";
+      position: absolute;
+      width: 260px; height: 260px;
+      right: -88px; top: -128px;
+      border-radius: 50%;
+      border: 22px solid rgba(201,37,44,.10);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(201,37,44,.11);
+    }
+
+    h1 {
+      margin: 10px 0 6px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: .95;
+      letter-spacing: -.05em;
+    }
+
+    .subtitle {
+      font-size: clamp(17px, 2vw, 22px);
+      margin: 0;
+      color: #353535;
+      font-weight: 650;
+    }
+
+    .method {
+      margin-top: 16px;
+      color: #4d4d4d;
+      max-width: 900px;
+      font-size: 14px;
+    }
+
+    .hero-note { padding: 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+    .hero-note strong { display: block; font-size: 14px; margin-bottom: 6px; }
+    .hero-note p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge,
+    .small-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.62);
+      color: #222;
+      font-size: 11px;
+      font-weight: 750;
+      padding: 4px 8px;
+      white-space: nowrap;
+    }
+
+    .badge.official { background: #222; color: #fff; border-color: #222; }
+    .badge.verify { background: #fff2dc; color: #7c4600; border-color: rgba(178,106,0,.25); }
+    .badge.sensitive { background: #fde7e9; color: #8c1018; border-color: rgba(162,15,27,.28); }
+    .badge.muted { color: #666; }
+    .small-badge { font-size: 10px; padding: 3px 7px; }
+
+    .filter-panel {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 12px;
+      margin: 14px 0 16px;
+      border-radius: 16px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(150px, 1fr)) minmax(220px, 1.4fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    select,
+    input,
+    button {
+      font: inherit;
+    }
+
+    select,
+    input[type="search"] {
+      width: 100%;
+      min-height: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,.74);
+      color: var(--ink);
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    select:focus,
+    input[type="search"]:focus {
+      border-color: rgba(201,37,44,.55);
+      box-shadow: 0 0 0 3px rgba(201,37,44,.1);
+    }
+
+    .btn {
+      min-height: 38px;
+      border: 0;
+      border-radius: 12px;
+      background: #1d1d1d;
+      color: #fff;
+      padding: 9px 14px;
+      font-weight: 760;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); background: #000; }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card { padding: 16px; min-height: 106px; }
+    .kpi-label { color: var(--muted); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .kpi-value { font-size: clamp(30px, 4vw, 48px); line-height: 1; margin-top: 12px; font-weight: 860; letter-spacing: -.05em; }
+    .kpi-hint { color: var(--muted); font-size: 12px; margin-top: 7px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 16px; }
+
+    .panel {
+      padding: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -.02em;
+    }
+
+    .section-note {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .theme-list { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 260px) minmax(160px, 1fr) 72px;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      padding: 6px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .bar-row:hover { background: rgba(255,255,255,.55); }
+    .bar-label { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+    .dot { width: 10px; height: 10px; border-radius: 3px; flex: 0 0 auto; background: #999; }
+    .bar-track {
+      display: block;
+      height: 16px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+    }
+    .bar-fill {
+      display: block;
+      height: 100%;
+      min-width: 3px;
+      border-radius: 999px;
+      opacity: .95;
+    }
+    .bar-num { font-family: var(--mono); font-size: 12px; color: #333; text-align: right; }
+
+    .svg-wrap,
+    .rose-wrap,
+    .matrix-wrap,
+    .table-wrap {
+      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.38);
+    }
+
+    .svg-wrap svg,
+    .rose-wrap svg { display: block; min-width: 720px; width: 100%; height: auto; }
+
+    .rose-wrap {
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.55), rgba(255,255,255,.16) 55%, transparent 70%);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .legend button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 720;
+      cursor: pointer;
+    }
+    .legend button:hover { border-color: rgba(201,37,44,.5); }
+
+    .matrix-table,
+    .events-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      font-size: 12px;
+    }
+
+    .matrix-table th,
+    .matrix-table td,
+    .events-table th,
+    .events-table td {
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      border-right: 1px solid rgba(0,0,0,.06);
+      vertical-align: top;
+    }
+
+    .matrix-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: rgba(244,244,244,.95);
+      padding: 8px;
+      font-size: 11px;
+      text-align: center;
+      color: #333;
+      white-space: nowrap;
+    }
+    .matrix-table th:first-child { left: 0; z-index: 2; text-align: left; }
+    .matrix-table td { padding: 7px 8px; text-align: center; font-family: var(--mono); font-weight: 760; min-width: 72px; }
+    .matrix-table .region-cell {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      text-align: left;
+      font-family: var(--font);
+      font-weight: 780;
+      background: rgba(247,247,247,.96);
+      min-width: 150px;
+    }
+    .matrix-table button {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: inherit;
+      cursor: pointer;
+      padding: 0;
+    }
+    .matrix-zero { color: rgba(0,0,0,.28); }
+
+    .source-list { display: flex; flex-direction: column; gap: 10px; }
+    .source-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 260px) minmax(150px, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      border-radius: 14px;
+      padding: 8px;
+      cursor: pointer;
+    }
+    .source-row:hover { background: rgba(255,255,255,.55); }
+    .source-name { font-weight: 780; font-size: 13px; }
+    .source-track { height: 14px; border-radius: 999px; background: rgba(255,255,255,.74); border: 1px solid rgba(0,0,0,.08); overflow: hidden; }
+    .source-fill { height: 100%; background: #1f1f1f; }
+    .source-meta { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .person-card {
+      border: 1px solid rgba(0,0,0,.09);
+      border-radius: 14px;
+      background: rgba(255,255,255,.55);
+      padding: 12px;
+      min-height: 150px;
+    }
+    .person-name { font-weight: 850; font-size: 16px; letter-spacing: -.02em; }
+    .person-meta { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+    .person-event { font-size: 12px; color: #333; }
+
+    .table-wrap { max-height: 580px; background: rgba(255,255,255,.48); }
+    .events-table th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: rgba(236,236,236,.98);
+      color: #333;
+      text-align: left;
+      padding: 9px 8px;
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .events-table td { padding: 9px 8px; background: rgba(255,255,255,.45); }
+    .events-table tr:hover td { background: rgba(255,255,255,.80); }
+    .date-cell { font-family: var(--mono); font-size: 11px; color: #333; white-space: nowrap; }
+    .theme-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 999px;
+      padding: 4px 7px;
+      font-size: 11px;
+      background: rgba(255,255,255,.72);
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .event-text { min-width: 300px; max-width: 520px; }
+    .affected-cell { min-width: 170px; color: #444; }
+    .link-cell a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #111;
+      font-weight: 760;
+    }
+
+    .empty,
+    .error {
+      padding: 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.6);
+      border: 1px dashed rgba(0,0,0,.22);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .error { border-color: rgba(201,37,44,.45); color: #8b1118; background: rgba(255,238,239,.8); }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 12px 4px 0;
+    }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .grid-main,
+      .grid-2 { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(3, 1fr); }
+      .people-grid { grid-template-columns: repeat(2, 1fr); }
+      .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .page { width: min(100% - 18px, 1440px); padding-top: 10px; }
+      .hero-main { padding: 18px; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .filters { grid-template-columns: 1fr; }
+      .people-grid { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 1fr; gap: 6px; }
+      .source-row { grid-template-columns: 1fr; }
+      .source-meta { justify-content: flex-start; }
+      .panel { padding: 12px; }
+      h1 { font-size: 36px; }
+      .filter-panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <script type="application/json" id="events-data">
+[
+  {
+    "id": "EVT-2026-0001",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-07",
+    "publication_date": "2026-05-07",
+    "week_start": "2026-05-04",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Civil.ge",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [
+      "Гурам Рогава",
+      "Леван Хабеишвили",
+      "Звиад Маисашвили"
+    ],
+    "person_roles": [
+      "журналист",
+      "другое",
+      "пострадавший"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Прокуратура объявила о первых задержаниях по делам о полицейском насилии против журналиста, политика и протестующего. Это по официальной версии.",
+    "affected": "Гурам Рогава, Леван Хабеишвили, Звиад Маисашвили",
+    "url": "https://civil.ge/archives/733510"
+  },
+  {
+    "id": "EVT-2026-0002",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-08",
+    "publication_date": "2026-05-08",
+    "week_start": "2026-05-04",
+    "theme_group": "Протесты и локальные конфликты",
+    "theme_primary": "протесты и локальные конфликты",
+    "theme_color": "protests",
+    "timeline_topic": "Протесты",
+    "source": "Civil.ge",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Георгий Кучуашвили"
+    ],
+    "person_roles": [
+      "политзаключённый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Осуждённый по делу протестов против закона об «иноагентах» Георгий Кучуашвили вышел из тюрьмы после отбытия срока.",
+    "affected": "участник протестов; другие заключённые по протестным делам",
+    "url": "https://civil.ge/archives/733596"
+  },
+  {
+    "id": "EVT-2026-0003",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-18",
+    "publication_date": "2026-05-18",
+    "week_start": "2026-05-18",
+    "theme_group": "Журналисты и гражданское общество",
+    "theme_primary": "грузинский закон об “иноагентах” и давление на гражданское общество",
+    "theme_color": "civil_society",
+    "timeline_topic": "нет",
+    "source": "Civil.ge",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "МВД объявило о создании подразделения для мониторинга «языка ненависти»; правозащитники и критики связывают это с риском цензуры. Это по официальной версии.",
+    "affected": "активисты, критики власти, пользователи соцсетей",
+    "url": "https://civil.ge/archives/734811"
+  },
+  {
+    "id": "EVT-2026-0004",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-19",
+    "publication_date": "2026-05-19",
+    "week_start": "2026-05-18",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "преследование мусульманских групп",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Civil.ge",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "СГБ заявила о задержании трёх граждан Грузии в Панкиси по обвинениям, связанным с ИГ. Это по официальной версии.",
+    "affected": "трое жителей Панкиси",
+    "url": "https://civil.ge/archives/735065"
+  },
+  {
+    "id": "EVT-2026-0005",
+    "region": "Азербайджан",
+    "secondary_region": "Грузия",
+    "macroregion": "Трансграничное",
+    "event_date": "2026-05-26",
+    "publication_date": "2026-05-26",
+    "week_start": "2026-05-25",
+    "theme_group": "Журналисты и гражданское общество",
+    "theme_primary": "давление на журналистов",
+    "theme_color": "civil_society",
+    "timeline_topic": "нет",
+    "source": "Civil.ge",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Афган Садыгов"
+    ],
+    "person_roles": [
+      "журналист"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "низкий",
+    "what_happened": "Депортированный из Грузии журналист Афган Садыгов сообщил, что ему запретили выезд из Азербайджана.",
+    "affected": "Афган Садыгов",
+    "url": "https://civil.ge/archives/735848"
+  },
+  {
+    "id": "EVT-2026-0006",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-29",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-05-25",
+    "theme_group": "Протесты и локальные конфликты",
+    "theme_primary": "протесты и локальные конфликты",
+    "theme_color": "protests",
+    "timeline_topic": "Протесты",
+    "source": "Civil.ge",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Зураб Ментешашвили"
+    ],
+    "person_roles": [
+      "активист"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Участника протеста Зураба Ментешашвили приговорили к девяти месяцам заключения по делу о повторном перекрытии дороги.",
+    "affected": "протестующий",
+    "url": "https://civil.ge/archives/736271"
+  },
+  {
+    "id": "EVT-2026-0007",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-30",
+    "publication_date": "2026-05-30",
+    "week_start": "2026-05-25",
+    "theme_group": "Журналисты и гражданское общество",
+    "theme_primary": "грузинский закон об “иноагентах” и давление на гражданское общество",
+    "theme_color": "civil_society",
+    "timeline_topic": "нет",
+    "source": "JAMnews",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [
+      "Ираклий Чихладзе",
+      "Гулбаат Рцхиладзе"
+    ],
+    "person_roles": [
+      "журналист",
+      "правозащитник"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "СГБ заявила о задержании двух граждан по обвинению в шпионаже; среди них фигурирует руководитель правозащитной НПО. Это по официальной версии.",
+    "affected": "Ираклий Чихладзе; Гулбаат Рцхиладзе",
+    "url": "https://jam-news.net/espionage-arrests-in-georgia-irakli-chikhladze-and-gulbaat-rtskhiladze/"
+  },
+  {
+    "id": "EVT-2026-0008",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2023-07-01",
+    "publication_date": "2026-06-01",
+    "week_start": "2023-06-26",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Batumelebi",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "Участник акции против российского круизного лайнера в Батуми рассказал о штрафе, блокировке счёта и насилии после задержания.",
+    "affected": "участник акции с инвалидностью",
+    "url": "https://batumelebi.netgazeti.ge/news/618833/"
+  },
+  {
+    "id": "EVT-2026-0010",
+    "region": "Азербайджан",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-20",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "преследование мусульманских групп",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Meydan TV",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Elgiz Məmmədov"
+    ],
+    "person_roles": [
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Участника движения «Мусульманское единство» Elgiz Məmmədov приговорили к трём годам; ранее сообщалось о пытках после задержания.",
+    "affected": "участник мусульманского движения",
+    "url": "https://storage.googleapis.com/qurium/www.meydan.tv/az-article-m%C3%BCs%C9%99lman-birliyi-h%C9%99r%C9%99kat%C4%B1n%C4%B1n-%C3%BCzv%C3%BC-3-il-azadl%C4%B1qdan-m%C9%99hrum-edilib.html"
+  },
+  {
+    "id": "EVT-2026-0011",
+    "region": "Азербайджан",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-05",
+    "publication_date": "2026-05-20",
+    "week_start": "2026-05-04",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Meydan TV",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Ilgar Aliyev"
+    ],
+    "person_roles": [
+      "политзаключённый",
+      "пострадавший"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "В колонии №13 умер ИКТ-эксперт Ilgar Aliyev, связанный с делом AbzasMedia; опубликованы материалы с утверждениями о подброшенных веществах и насилии.",
+    "affected": "Ilgar Aliyev; политические заключённые",
+    "url": "https://storage.googleapis.com/qurium/www.meydan.tv/az-article-h%C9%99bsxanada-%C3%B6l%C9%99n-i%CC%87kt-ekspertinin-son-s%C9%99s-yaz%C4%B1s%C4%B1-m%C9%99ni-%C5%9F%C9%99rl%C9%99yib-h%C9%99bs-etdil%C9%99r-2-2.html"
+  },
+  {
+    "id": "EVT-2026-0012",
+    "region": "Азербайджан",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-21",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Meydan TV",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Bəhruz Səmədov"
+    ],
+    "person_roles": [
+      "активист",
+      "политзаключённый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Верховный суд оставил в силе приговор исследователю и peace-активисту Bəhruz Səmədov; он отвергает обвинения.",
+    "affected": "Bəhruz Səmədov",
+    "url": "https://storage.googleapis.com/qurium/www.meydan.tv/az-article-ali-m%C9%99hk%C9%99m%C9%99-b%C9%99hruz-s%C9%99m%C9%99dov-haqq%C4%B1ndak%C4%B1-h%C3%B6km%C3%BC-q%C3%BCvv%C9%99d%C9%99-saxlay%C4%B1b.html"
+  },
+  {
+    "id": "EVT-2026-0019",
+    "region": "Чечня",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-24",
+    "publication_date": "2026-05-24",
+    "week_start": "2026-05-18",
+    "theme_group": "Женщины и семейное насилие",
+    "theme_primary": "права женщин",
+    "theme_color": "women",
+    "timeline_topic": "Права женщин",
+    "source": "Кавказ.Реалии",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "В Чечне возбуждено дело против мужчины, ударившего бегуна за тренировку с женой; по версии следствия, позднее он ударил полицейского.",
+    "affected": "супружеская пара; обвиняемый",
+    "url": "https://www.svoboda.org/a/v-chechne-vozbuzhdeno-delo-v-otnoshenii-mestnogo-zhitelya-on-udaril-beguna-za-trenirovku-s-zhenoy/33763638.html"
+  },
+  {
+    "id": "EVT-2026-0022",
+    "region": "Чечня",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-29",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-05-25",
+    "theme_group": "Женщины и семейное насилие",
+    "theme_primary": "семейное насилие и «убийства чести»",
+    "theme_color": "women",
+    "timeline_topic": "Права женщин",
+    "source": "Кавказ.Реалии; Чечня Сегодня",
+    "source_role": "mixed",
+    "verification_status": "sensitive_case",
+    "weight": 1,
+    "person_names": [
+      "Белкиса Минцаева"
+    ],
+    "person_roles": [
+      "пострадавший"
+    ],
+    "person_month_flag": "осторожно",
+    "personal_data_risk": "высокий",
+    "what_happened": "После сообщений о задержании и исчезновении Белкисы Минцаевой чеченские госканалы показали ее в доме бывшего мужа; безопасность и добровольность требуют проверки. В «Чечня Сегодня» опубликована официальная версия с видео-опровержением.",
+    "affected": "Белкиса Минцаева и дети",
+    "url": "https://www.svoboda.org/a/chechenskie-goskanaly-opublikovali-reportazh-s-nasiljno-vozvraschennoy-v-semjyu-materjyu/33768174.html"
+  },
+  {
+    "id": "EVT-2026-0024",
+    "region": "Дагестан",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-01",
+    "publication_date": "2026-05-26",
+    "week_start": "2026-04-27",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "Бывшим полицейским из Дагестана назначены условные сроки по делу о пытках задержанной и фабрикации дела о наркотиках.",
+    "affected": "задержанная/потерпевшая; бывшие полицейские",
+    "url": "https://www.svoboda.org/a/dvuh-politseyskih-iz-dagestana-osvobodili-ot-realjnogo-sroka-za-podkinutye-narkotiki/33765821.html"
+  },
+  {
+    "id": "EVT-2026-0025",
+    "region": "Кабардино-Балкария",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-04-23",
+    "publication_date": "2026-05-28",
+    "week_start": "2026-04-20",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "sensitive_case",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "высокий",
+    "what_happened": "Верховный суд КБР обязал немедленно отпустить 16-летнего студента, помещенного в СИЗО по подозрению в хранении гранаты; лишние персональные данные не раскрываются.",
+    "affected": "несовершеннолетний студент",
+    "url": "https://www.svoboda.org/a/33767484.html"
+  },
+  {
+    "id": "EVT-2026-0026",
+    "region": "Ростовская область",
+    "secondary_region": "СИЗО Таганрога",
+    "macroregion": "Юг России",
+    "event_date": "2026-05-28",
+    "publication_date": "2026-05-28",
+    "week_start": "2026-05-25",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "преследование мусульманских групп",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "mixed",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Магомед Ханилаев"
+    ],
+    "person_roles": [
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Участника сухой голодовки в СИЗО Таганрога осудили за организацию «тюремного джамаата»; правозащитники говорят о фабрикации таких дел.",
+    "affected": "Магомед Ханилаев; заключенные СИЗО",
+    "url": "https://www.svoboda.org/a/obyavivshego-golodovku-v-sizo-taganroga-osudili-za-organizatsiyu-tyuremnogo-dzhamaata/33767391.html"
+  },
+  {
+    "id": "EVT-2026-0027",
+    "region": "Краснодарский край",
+    "secondary_region": "Сочи",
+    "macroregion": "Юг России",
+    "event_date": "2026-05-28",
+    "publication_date": "2026-05-28",
+    "week_start": "2026-05-25",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "Бывший оперуполномоченный МВД в Сочи осужден на 9 лет за вымогательство у предпринимателя; начальнику назначен условный срок.",
+    "affected": "предприниматель; бывшие полицейские",
+    "url": "https://www.svoboda.org/a/politseyskogo-iz-sochi-osudili-na-9-let-za-prevyshenie-polnomochiy-ego-nachaljniku-dali-uslovnyy-srok/33767546.html"
+  },
+  {
+    "id": "EVT-2026-0029",
+    "region": "Дагестан",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-01",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-04-27",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "дела о терроризме и экстремизме",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "низкий",
+    "what_happened": "В Махачкале минимум пять человек оштрафованы за логотипы Instagram/Facebook на вывесках, рекламе и автомобиле по статье об экстремистской символике.",
+    "affected": "владельцы магазинов; житель Махачкалы",
+    "url": "https://www.svoboda.org/a/zhiteley-dagestana-massovo-shtrafuyut-iz-za-logotipov-instagram-na-naruzhnoy-reklame-i-avto/33768315.html"
+  },
+  {
+    "id": "EVT-2026-0030",
+    "region": "Ингушетия",
+    "secondary_region": "Северная Осетия",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-29",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-05-25",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "Жителя Ингушетии арестовали по делу о наезде на дорожного инспектора на КПП; по официальной версии МВД, он был задержан в Назрани.",
+    "affected": "неназванный житель Ингушетии; сотрудник ДПС",
+    "url": "https://www.svoboda.org/a/zhitelya-ingushetii-zaderzhali-za-naezd-na-dorozhnogo-inspektora-na-kpp-v-severnoy-osetii/33768244.html"
+  },
+  {
+    "id": "EVT-2026-0031",
+    "region": "Ингушетия",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-28",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-05-25",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Курейш Хазбиев"
+    ],
+    "person_roles": [
+      "чиновник",
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "В отношении мирового судьи Ингушетии Курейша Хазбиева разрешили уголовное преследование по статье о вынесении неправосудного приговора.",
+    "affected": "Курейш Хазбиев; заявители по делам",
+    "url": "https://www.svoboda.org/a/cudjyu-iz-ingushetii-razreshili-presledovatj-za-vynesenie-nezakonnyh-prigovorov/33768382.html"
+  },
+  {
+    "id": "EVT-2026-0032",
+    "region": "Краснодарский край",
+    "secondary_region": "Туапсе",
+    "macroregion": "Юг России",
+    "event_date": "2026-05-30",
+    "publication_date": "2026-05-30",
+    "week_start": "2026-05-25",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "дела о терроризме и экстремизме",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "высокий",
+    "what_happened": "ФСБ задержала 17-летнего и 18-летнего жителей Туапсе по делу о приготовлении к теракту; по официальной версии, детали получили за 30 долларов. Один фигурант несовершеннолетний, личные данные не раскрываются.",
+    "affected": "17-летний и 18-летний жители Туапсе",
+    "url": "https://www.svoboda.org/amp/dvuh-podrostkov-iz-tuapse-obvinyayut-v-podgotovke-terakta-za-30/33768950.html"
+  },
+  {
+    "id": "EVT-2026-0033",
+    "region": "Ингушетия",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2024-12-09",
+    "publication_date": "2026-05-30",
+    "week_start": "2024-12-09",
+    "theme_group": "Война и мобилизация",
+    "theme_primary": "мобилизация, война, выплаты, погибшие",
+    "theme_color": "war",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Магомет Евлоев"
+    ],
+    "person_roles": [
+      "обвиняемый",
+      "другое"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Бойца ОМОН Росгвардии по Ингушетии Магомета Евлоева оштрафовали за насилие в отношении полицейского; суд учел его участие в войне против Украины.",
+    "affected": "Магомет Евлоев; сотрудник ДПС",
+    "url": "https://www.svoboda.org/amp/voevavshego-v-ukraine-boytsa-omon-iz-ingushetii-oshtrafovali-za-stychku-s-dorozhnym-inspektorom-sud-vystavil-ego-bezrabotnym/33769061.html"
+  },
+  {
+    "id": "EVT-2026-0034",
+    "region": "Дагестан",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-04-01",
+    "publication_date": "2026-05-31",
+    "week_start": "2026-03-30",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "дела о терроризме и экстремизме",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказ.Реалии",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Агахан Алибегов"
+    ],
+    "person_roles": [
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Агахана Алибегова, задержанного в 2024 году по делу о «террористической» ячейке, отправили в СИЗО по новому уголовному делу; суд оставил арест.",
+    "affected": "Агахан Алибегов; другие фигуранты",
+    "url": "https://www.svoboda.org/a/zaderzhannogo-v-sostave-terroristicheskoy-yacheyki-v-derbente-sudyat-po-novomu-delu/33769412.html"
+  },
+  {
+    "id": "EVT-2026-0035",
+    "region": "Чечня",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-12",
+    "publication_date": "2026-05-12",
+    "week_start": "2026-05-11",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Прокуратура Чеченской Республики",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "по официальной версии прокуратура ЧР проверила условия содержания подозреваемых и обвиняемых в СИЗО-1; официальная версия не является независимым подтверждением.",
+    "affected": "подозреваемые, обвиняемые и осужденные в СИЗО-1",
+    "url": "https://t.me/s/chechproc"
+  },
+  {
+    "id": "EVT-2026-0037",
+    "region": "Ставропольский край",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-06-01",
+    "publication_date": "2026-06-01",
+    "week_start": "2026-06-01",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "В суд передано дело двух братьев, обвиняемых в принуждении молодого человека к рабскому труду.",
+    "affected": "пострадавший молодой человек",
+    "url": "https://www.kavkaz-uzel.eu/articles/423718"
+  },
+  {
+    "id": "EVT-2026-0039",
+    "region": "Азербайджан",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-29",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-05-25",
+    "theme_group": "Журналисты и гражданское общество",
+    "theme_primary": "давление на журналистов",
+    "theme_color": "civil_society",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Aytaj Tapdyg"
+    ],
+    "person_roles": [
+      "журналист"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "низкий",
+    "what_happened": "Европейский центр свободы прессы призвал снять запрет на выезд с матери арестованной журналистки Aytaj Tapdyg и прекратить давление на семью.",
+    "affected": "журналистка, родственница журналистки",
+    "url": "https://www.kavkaz-uzel.eu/articles/423655"
+  },
+  {
+    "id": "EVT-2026-0040",
+    "region": "Дагестан",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-29",
+    "publication_date": "2026-05-29",
+    "week_start": "2026-05-25",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "sensitive_case",
+    "weight": 1,
+    "person_names": [
+      "Кирилл/Муслим Присяжнюк"
+    ],
+    "person_roles": [
+      "пострадавший",
+      "обвиняемый"
+    ],
+    "person_month_flag": "осторожно",
+    "personal_data_risk": "высокий",
+    "what_happened": "Семья сообщила о задержании Кирилла/Муслима Присяжнюка в Махачкале и визите вооружённых силовиков домой; сообщение требует редакторской проверки.",
+    "affected": "задержанный, семья",
+    "url": "https://www.kavkaz-uzel.eu/articles/423648"
+  },
+  {
+    "id": "EVT-2026-0041",
+    "region": "Адыгея",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-28",
+    "publication_date": "2026-05-28",
+    "week_start": "2026-05-25",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "mixed",
+    "verification_status": "sensitive_case",
+    "weight": 1,
+    "person_names": [
+      "Виктория Гончарова"
+    ],
+    "person_roles": [
+      "политзаключённый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "высокий",
+    "what_happened": "Заключённая Виктория Гончарова не получает помощи от родственников из Украины; правозащитники считают её политзаключённой.",
+    "affected": "заключённая",
+    "url": "https://www.kavkaz-uzel.eu/articles/423622"
+  },
+  {
+    "id": "EVT-2026-0042",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-28",
+    "publication_date": "2026-05-28",
+    "week_start": "2026-05-25",
+    "theme_group": "Пытки и силовое насилие",
+    "theme_primary": "пытки и насилие силовиков",
+    "theme_color": "torture",
+    "timeline_topic": "Пытки",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "В Гори начато расследование насилия полиции над задержанными; один из задержанных заявил об избиении.",
+    "affected": "задержанные",
+    "url": "https://www.kavkaz-uzel.eu/articles/423599"
+  },
+  {
+    "id": "EVT-2026-0044",
+    "region": "Азербайджан",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-26",
+    "publication_date": "2026-05-26",
+    "week_start": "2026-05-25",
+    "theme_group": "Журналисты и гражданское общество",
+    "theme_primary": "грузинский закон об “иноагентах” и давление на гражданское общество",
+    "theme_color": "civil_society",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Абдул Абилов"
+    ],
+    "person_roles": [
+      "другое"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "ЕСПЧ признал нарушение права блогера Абдула Абилова на справедливое судебное разбирательство.",
+    "affected": "блогер",
+    "url": "https://www.kavkaz-uzel.eu/articles/423575"
+  },
+  {
+    "id": "EVT-2026-0045",
+    "region": "Армения",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-26",
+    "publication_date": "2026-05-26",
+    "week_start": "2026-05-25",
+    "theme_group": "Журналисты и гражданское общество",
+    "theme_primary": "грузинский закон об “иноагентах” и давление на гражданское общество",
+    "theme_color": "civil_society",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Артак Аветисян"
+    ],
+    "person_roles": [
+      "другое"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "низкий",
+    "what_happened": "Дело блогера Артака Аветисяна, критиковавшего премьера Армении, переквалифицировали со статьи о вражде на хулиганство.",
+    "affected": "блогер",
+    "url": "https://www.kavkaz-uzel.eu/articles/423569"
+  },
+  {
+    "id": "EVT-2026-0046",
+    "region": "Азербайджан",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-26",
+    "publication_date": "2026-05-26",
+    "week_start": "2026-05-25",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Тофиг Ягублу"
+    ],
+    "person_roles": [
+      "политзаключённый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Оппозиционеру Тофигу Ягублу разрешили медобследование в частной клинике после сообщений об ухудшении здоровья в заключении.",
+    "affected": "оппозиционер",
+    "url": "https://www.kavkaz-uzel.eu/articles/423568"
+  },
+  {
+    "id": "EVT-2026-0047",
+    "region": "Грузия",
+    "secondary_region": "",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-20",
+    "publication_date": "2026-05-20",
+    "week_start": "2026-05-18",
+    "theme_group": "Протесты и локальные конфликты",
+    "theme_primary": "протесты и локальные конфликты",
+    "theme_color": "protests",
+    "timeline_topic": "Протесты",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "В Тбилиси прошла акция против репрессивных законов и за освобождение задержанных участников протестов.",
+    "affected": "протестующие, гражданское общество",
+    "url": "https://www.kavkaz-uzel.eu/articles/423415"
+  },
+  {
+    "id": "EVT-2026-0048",
+    "region": "Кабардино-Балкария",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-21",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Протесты и локальные конфликты",
+    "theme_primary": "протесты и локальные конфликты",
+    "theme_color": "protests",
+    "timeline_topic": "Протесты",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "средний",
+    "what_happened": "Перед шествием к годовщине окончания Кавказской войны силовики массово вручали жителям предостережения.",
+    "affected": "участники шествия, активисты",
+    "url": "https://www.kavkaz-uzel.eu/articles/423428"
+  },
+  {
+    "id": "EVT-2026-0050",
+    "region": "Азербайджан",
+    "secondary_region": "РФ",
+    "macroregion": "Трансграничное",
+    "event_date": "2026-05-20",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "дела о терроризме и экстремизме",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [
+      "Сабир Мехдиев"
+    ],
+    "person_roles": [
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "низкий",
+    "what_happened": "По официальной версии, уроженец Азербайджана Сабир Мехдиев получил 8,5 года по делу о финансировании терроризма из-за денежного перевода.",
+    "affected": "осуждённый",
+    "url": "https://www.kavkaz-uzel.eu/articles/423421"
+  },
+  {
+    "id": "EVT-2026-0051",
+    "region": "Армения",
+    "secondary_region": "Карабах",
+    "macroregion": "Южный Кавказ",
+    "event_date": "2026-05-21",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Задержания и уголовные дела",
+    "theme_primary": "задержания и уголовные дела",
+    "theme_color": "detentions",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "confirmed_by_source",
+    "weight": 1,
+    "person_names": [
+      "Артур Осипян"
+    ],
+    "person_roles": [
+      "активист",
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "средний",
+    "what_happened": "Артур Осипян арестован по делу после конфликта с премьером; сторонники считают преследование политическим.",
+    "affected": "карабахский активист",
+    "url": "https://www.kavkaz-uzel.eu/articles/403552"
+  },
+  {
+    "id": "EVT-2026-0052",
+    "region": "Северная Осетия",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-21",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Женщины и семейное насилие",
+    "theme_primary": "права женщин",
+    "theme_color": "women",
+    "timeline_topic": "Права женщин",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "sensitive_case",
+    "weight": 1,
+    "person_names": [
+      "Олеся Биченова"
+    ],
+    "person_roles": [
+      "обвиняемый",
+      "пострадавший"
+    ],
+    "person_month_flag": "осторожно",
+    "personal_data_risk": "высокий",
+    "what_happened": "Суд рассматривает дело уроженки Северной Осетии Олеси Биченовой; версия следствия о подготовке к терроризму противоречит данным о её пребывании в лагере.",
+    "affected": "женщина, вернувшаяся из Сирии",
+    "url": "https://www.kavkaz-uzel.eu/articles/423418"
+  },
+  {
+    "id": "EVT-2026-0053",
+    "region": "Кабардино-Балкария",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-21",
+    "publication_date": "2026-05-21",
+    "week_start": "2026-05-18",
+    "theme_group": "Война и мобилизация",
+    "theme_primary": "мобилизация, война, выплаты, погибшие",
+    "theme_color": "war",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [
+      "Ислам Тешев"
+    ],
+    "person_roles": [
+      "обвиняемый",
+      "другое"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "низкий",
+    "what_happened": "По официальной версии, военный суд в Нальчике приговорил Ислама Тешева к семи годам за отсутствие в части в период мобилизации.",
+    "affected": "военнослужащий",
+    "url": "https://www.kavkaz-uzel.eu/articles/423407"
+  },
+  {
+    "id": "EVT-2026-0054",
+    "region": "Карачаево-Черкесия",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-04-30",
+    "publication_date": "2026-05-04",
+    "week_start": "2026-04-27",
+    "theme_group": "ЛГБТ+ и насильственные возвращения",
+    "theme_primary": "ЛГБТ+ и насильственные возвращения",
+    "theme_color": "lgbt",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "independent_report",
+    "verification_status": "sensitive_case",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "высокий",
+    "what_happened": "Сообщалось о задержании не менее 16 мужчин из-за подписки на группу для гей-знакомств; один, по данным правозащитников, был избит.",
+    "affected": "ЛГБТ+ люди",
+    "url": "https://www.kavkaz-uzel.eu/articles/422966"
+  },
+  {
+    "id": "EVT-2026-0055",
+    "region": "Ставропольский край",
+    "secondary_region": "",
+    "macroregion": "Северный Кавказ",
+    "event_date": "2026-05-04",
+    "publication_date": "2026-05-04",
+    "week_start": "2026-05-04",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "дела о терроризме и экстремизме",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [],
+    "person_roles": [],
+    "person_month_flag": "нет",
+    "personal_data_risk": "низкий",
+    "what_happened": "По официальной версии, житель Ставрополья получил 10,5 года за участие в террористической организации; ведомства не уточнили, о какой организации речь.",
+    "affected": "осуждённый",
+    "url": "https://www.kavkaz-uzel.eu/articles/422975"
+  },
+  {
+    "id": "EVT-2026-0056",
+    "region": "Чечня",
+    "secondary_region": "РФ",
+    "macroregion": "Трансграничное",
+    "event_date": "2026-05-04",
+    "publication_date": "2026-05-05",
+    "week_start": "2026-05-04",
+    "theme_group": "Терроризм и экстремизм",
+    "theme_primary": "дела о терроризме и экстремизме",
+    "theme_color": "extremism",
+    "timeline_topic": "нет",
+    "source": "Кавказский узел",
+    "source_role": "official_version",
+    "verification_status": "official_version_only",
+    "weight": 1,
+    "person_names": [
+      "Имам Исламов"
+    ],
+    "person_roles": [
+      "обвиняемый"
+    ],
+    "person_month_flag": "да",
+    "personal_data_risk": "низкий",
+    "what_happened": "По официальной версии, уроженец Чечни Имам Исламов получил 10,5 года как участник ИГ; статья подчёркивает, что ключевым доводом было сообщение.",
+    "affected": "осуждённый",
+    "url": "https://www.kavkaz-uzel.eu/articles/423009"
+  }
+]
+  </script>
+
+  <main class="page">
+    <section class="hero" aria-labelledby="dashboard-title">
+      <div class="hero-main">
+        <div class="eyebrow">Мониторинг открытых источников</div>
+        <h1 id="dashboard-title">Правозащитный пульс Кавказа</h1>
+        <p class="subtitle">По открытым источникам мониторинга за последние 30 дней</p>
+        <p class="method">Это не полная статистика нарушений, а карта событий, найденных в открытых источниках мониторинга. Официальные сообщения, непроверенные сигналы и чувствительные кейсы маркируются отдельно.</p>
+        <div class="status-row" aria-label="Редакционные статусы">
+          <span class="badge official">официальная версия</span>
+          <span class="badge verify">требует проверки</span>
+          <span class="badge sensitive">чувствительный кейс</span>
+        </div>
+      </div>
+      <aside class="hero-note">
+        <div>
+          <strong>Редакционная рамка</strong>
+          <p>Дашборд не делает выводов о виновности и не заменяет проверку фактов. Числа показывают объём найденных публикаций и событий в датасете.</p>
+        </div>
+        <div id="data-status" class="status-row"></div>
+      </aside>
+    </section>
+
+    <section class="filter-panel" aria-label="Фильтры">
+      <div class="filters">
+        <div class="control">
+          <label for="region-filter">Регион</label>
+          <select id="region-filter"><option value="">Все регионы</option></select>
+        </div>
+        <div class="control">
+          <label for="theme-filter">Тема</label>
+          <select id="theme-filter"><option value="">Все темы</option></select>
+        </div>
+        <div class="control">
+          <label for="source-filter">Источник</label>
+          <select id="source-filter"><option value="">Все источники</option></select>
+        </div>
+        <div class="control">
+          <label for="search-input">Поиск</label>
+          <input id="search-input" type="search" placeholder="регион, тема, событие, источник…" />
+        </div>
+        <button id="reset-filters" class="btn" type="button">Сбросить</button>
+      </div>
+    </section>
+
+    <section class="kpis" aria-label="Счётчики">
+      <div class="kpi-card"><div class="kpi-label">Событий</div><div class="kpi-value" id="kpi-events">—</div><div class="kpi-hint">в текущей выборке</div></div>
+      <div class="kpi-card"><div class="kpi-label">Регионов</div><div class="kpi-value" id="kpi-regions">—</div><div class="kpi-hint">уникальные регионы</div></div>
+      <div class="kpi-card"><div class="kpi-label">Тем</div><div class="kpi-value" id="kpi-themes">—</div><div class="kpi-hint">theme_group</div></div>
+      <div class="kpi-card"><div class="kpi-label">Источников</div><div class="kpi-value" id="kpi-sources">—</div><div class="kpi-hint">с учётом разделения «;»</div></div>
+      <div class="kpi-card"><div class="kpi-label">Персон месяца</div><div class="kpi-value" id="kpi-persons">—</div><div class="kpi-hint">без высокого риска</div></div>
+    </section>
+
+    <section class="grid-main">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Тематический пульс</h2>
+            <p class="section-note">Горизонтальная инфографика по группам тем. Клик по теме применяет фильтр.</p>
+          </div>
+          <span class="small-badge muted" id="theme-total-label">—</span>
+        </div>
+        <div id="theme-pulse" class="theme-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Линия времени</h2>
+            <p class="section-note">Пытки / Протесты / Права женщин. Недели построены по дате публикации.</p>
+          </div>
+        </div>
+        <div id="timeline" class="svg-wrap"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Карта-роза</h2>
+          <p class="section-note">Регионы расположены по окружности; цветные лучи показывают тематическую структуру региона.</p>
+        </div>
+      </div>
+      <div id="rose" class="rose-wrap"></div>
+      <div id="rose-legend" class="legend" aria-label="Легенда тем"></div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Матрица регион × тема</h2>
+            <p class="section-note">Ячейка показывает число событий. Клик по региону или теме применяет фильтр.</p>
+          </div>
+        </div>
+        <div id="matrix" class="matrix-wrap"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Источники</h2>
+            <p class="section-note">Рейтинг источников по числу событий/упоминаний в текущей выборке.</p>
+          </div>
+        </div>
+        <div id="sources" class="source-list"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Персоны месяца</h2>
+          <p class="section-note">Показываются только публично значимые персоны: person_month_flag = «да» и personal_data_risk не равен «высокий».</p>
+        </div>
+      </div>
+      <div id="people" class="people-grid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Полная таблица</h2>
+          <p class="section-note">Вертикальная прокрутка, поиск и фильтры. Ссылки открываются в новой вкладке.</p>
+        </div>
+        <span class="small-badge muted" id="table-count">—</span>
+      </div>
+      <div class="table-wrap">
+        <table class="events-table" aria-describedby="table-count">
+          <thead>
+            <tr>
+              <th>Регион</th>
+              <th>Дата события</th>
+              <th>Дата публикации</th>
+              <th>Тема</th>
+              <th>Что произошло</th>
+              <th>Кто затронут</th>
+              <th>Источник</th>
+              <th>Ссылка</th>
+            </tr>
+          </thead>
+          <tbody id="events-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="footer-note">Примечание: визуализации обновляются по фильтрам. Для чувствительных кейсов персональные детали ограничиваются в публичном интерфейсе.</p>
+  </main>
+
+  <script>
+    // Статический дашборд без внешних зависимостей.
+    // Все агрегаты считаются в браузере на основе JSON внутри #events-data.
+    (function () {
+      'use strict';
+
+      const themePalette = {
+        torture: '#c9252c',
+        protests: '#171717',
+        women: '#8c4d63',
+        civil_society: '#536f7c',
+        extremism: '#715f52',
+        detentions: '#a16a2a',
+        war: '#737373',
+        lgbt: '#7b5588',
+        default: '#4f4f4f'
+      };
+
+      const topicPalette = {
+        'Пытки': '#c9252c',
+        'Протесты': '#171717',
+        'Права женщин': '#8c4d63'
+      };
+
+      const roleLabels = {
+        official_version: 'официальная версия',
+        independent_report: 'независимый источник',
+        mixed: 'смешанные источники'
+      };
+
+      const state = { region: '', theme: '', source: '', query: '' };
+      let rawEvents = [];
+      let baseEvents = [];
+      let hasDashboardInclude = false;
+      let themeColorByGroup = new Map();
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function escapeAttr(value) {
+        return escapeHtml(value).replaceAll('`', '&#096;');
+      }
+
+      function norm(value) {
+        return String(value ?? '').trim();
+      }
+
+      function lower(value) {
+        return norm(value).toLowerCase();
+      }
+
+      function splitSources(source) {
+        return norm(source)
+          .split(';')
+          .map(s => s.trim())
+          .filter(Boolean);
+      }
+
+      function unique(values) {
+        return Array.from(new Set(values.filter(v => norm(v))));
+      }
+
+      function sum(values) {
+        return values.reduce((acc, v) => acc + Number(v || 0), 0);
+      }
+
+      function parseDate(dateString) {
+        const value = norm(dateString);
+        if (!value) return null;
+        const d = new Date(value + 'T00:00:00');
+        return Number.isNaN(d.getTime()) ? null : d;
+      }
+
+      function formatDate(dateString) {
+        const d = parseDate(dateString);
+        if (!d) return '—';
+        return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      }
+
+      function isoDate(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function startOfWeek(dateString) {
+        const d = parseDate(dateString);
+        if (!d) return '';
+        const day = d.getDay() || 7;
+        d.setDate(d.getDate() - day + 1);
+        return isoDate(d);
+      }
+
+      function themeColor(eventOrGroup) {
+        if (typeof eventOrGroup === 'object' && eventOrGroup) {
+          return themePalette[eventOrGroup.theme_color] || themeColorByGroup.get(eventOrGroup.theme_group) || themePalette.default;
+        }
+        return themeColorByGroup.get(eventOrGroup) || themePalette.default;
+      }
+
+      function hexToRgba(hex, alpha) {
+        const clean = String(hex).replace('#', '');
+        const bigint = parseInt(clean.length === 3 ? clean.split('').map(x => x + x).join('') : clean, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function isHighRisk(event) {
+        return lower(event.personal_data_risk) === 'высокий';
+      }
+
+      function isPersonMonthPublic(event) {
+        return lower(event.person_month_flag) === 'да' && !isHighRisk(event);
+      }
+
+      function isOfficial(event) {
+        return lower(event.source_role) === 'official_version' || lower(event.verification_status) === 'official_version_only';
+      }
+
+      function needsVerification(event) {
+        const v = lower(event.verification_status);
+        return v === 'needs_verification' || v === 'sensitive_case' || lower(event.person_month_flag) === 'осторожно';
+      }
+
+      function isSensitive(event) {
+        return lower(event.verification_status) === 'sensitive_case' || isHighRisk(event);
+      }
+
+      function statusBadges(event) {
+        const badges = [];
+        if (isOfficial(event)) badges.push('<span class="badge official">официальная версия</span>');
+        if (needsVerification(event)) badges.push('<span class="badge verify">требует проверки</span>');
+        if (isSensitive(event)) badges.push('<span class="badge sensitive">чувствительный кейс</span>');
+        return badges.join(' ');
+      }
+
+      function roleBadge(role, count) {
+        const label = roleLabels[role] || role || 'роль не указана';
+        const cls = role === 'official_version' ? 'official' : (role === 'mixed' ? 'verify' : 'muted');
+        return `<span class="small-badge ${cls}">${escapeHtml(label)}: ${count}</span>`;
+      }
+
+      function safeText(event, text) {
+        let value = norm(text);
+        if (isHighRisk(event)) {
+          for (const name of (event.person_names || [])) {
+            if (name) value = value.split(name).join('персона скрыта');
+          }
+        }
+        return escapeHtml(value || '—');
+      }
+
+      function safeAffected(event) {
+        if (isHighRisk(event)) return 'чувствительный кейс; детали ограничены';
+        return norm(event.affected) || '—';
+      }
+
+      function prepareEvents(events) {
+        hasDashboardInclude = events.some(e => Object.prototype.hasOwnProperty.call(e, 'dashboard_include'));
+        return events
+          .filter(e => Number(e.weight) === 1)
+          .filter(e => !hasDashboardInclude || lower(e.dashboard_include) === 'да')
+          .map(e => ({
+            id: norm(e.id),
+            region: norm(e.region) || 'Регион не указан',
+            secondary_region: norm(e.secondary_region),
+            macroregion: norm(e.macroregion) || 'Макрорегион не указан',
+            event_date: norm(e.event_date),
+            publication_date: norm(e.publication_date),
+            week_start: norm(e.week_start),
+            theme_group: norm(e.theme_group) || 'Тема не указана',
+            theme_primary: norm(e.theme_primary),
+            theme_color: norm(e.theme_color) || 'default',
+            timeline_topic: norm(e.timeline_topic) || 'нет',
+            source: norm(e.source) || 'Источник не указан',
+            source_role: norm(e.source_role),
+            verification_status: norm(e.verification_status),
+            weight: Number(e.weight) || 0,
+            person_names: Array.isArray(e.person_names) ? e.person_names.map(norm).filter(Boolean) : [],
+            person_roles: Array.isArray(e.person_roles) ? e.person_roles.map(norm).filter(Boolean) : [],
+            person_month_flag: norm(e.person_month_flag),
+            personal_data_risk: norm(e.personal_data_risk),
+            what_happened: norm(e.what_happened),
+            affected: norm(e.affected),
+            url: norm(e.url)
+          }));
+      }
+
+      function buildThemeColorMap(events) {
+        themeColorByGroup = new Map();
+        const counts = new Map();
+        for (const event of events) {
+          const key = event.theme_group;
+          const color = themePalette[event.theme_color] ? event.theme_color : 'default';
+          const mapKey = `${key}|||${color}`;
+          counts.set(mapKey, (counts.get(mapKey) || 0) + 1);
+        }
+        for (const [mapKey] of counts) {
+          const [group, colorKey] = mapKey.split('|||');
+          if (!themeColorByGroup.has(group)) themeColorByGroup.set(group, themePalette[colorKey] || themePalette.default);
+        }
+      }
+
+      function getFilteredEvents() {
+        const q = lower(state.query);
+        return baseEvents.filter(event => {
+          if (state.region && event.region !== state.region) return false;
+          if (state.theme && event.theme_group !== state.theme) return false;
+          if (state.source && !splitSources(event.source).includes(state.source)) return false;
+          if (q) {
+            const parts = [
+              event.id, event.region, event.secondary_region, event.macroregion,
+              event.event_date, event.publication_date, event.theme_group,
+              event.theme_primary, event.source, event.source_role,
+              event.verification_status, event.what_happened, safeAffected(event)
+            ];
+            if (!isHighRisk(event)) parts.push(...event.person_names);
+            if (!parts.join(' ').toLowerCase().includes(q)) return false;
+          }
+          return true;
+        });
+      }
+
+      function groupCount(events, getter) {
+        const map = new Map();
+        for (const event of events) {
+          const key = getter(event);
+          if (!key) continue;
+          map.set(key, (map.get(key) || 0) + event.weight);
+        }
+        return map;
+      }
+
+      function sortEntries(map) {
+        return Array.from(map.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ru'));
+      }
+
+      function setSelectOptions(select, values, placeholder) {
+        const current = select.value;
+        select.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + values
+          .map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`)
+          .join('');
+        if (values.includes(current)) select.value = current;
+      }
+
+      function initFilters() {
+        setSelectOptions($('#region-filter'), unique(baseEvents.map(e => e.region)).sort((a,b) => a.localeCompare(b, 'ru')), 'Все регионы');
+        setSelectOptions($('#theme-filter'), unique(baseEvents.map(e => e.theme_group)).sort((a,b) => a.localeCompare(b, 'ru')), 'Все темы');
+        const sources = unique(baseEvents.flatMap(e => splitSources(e.source))).sort((a,b) => a.localeCompare(b, 'ru'));
+        setSelectOptions($('#source-filter'), sources, 'Все источники');
+
+        $('#region-filter').addEventListener('change', e => { state.region = e.target.value; renderAll(); });
+        $('#theme-filter').addEventListener('change', e => { state.theme = e.target.value; renderAll(); });
+        $('#source-filter').addEventListener('change', e => { state.source = e.target.value; renderAll(); });
+        $('#search-input').addEventListener('input', e => { state.query = e.target.value; renderAll(); });
+        $('#reset-filters').addEventListener('click', resetFilters);
+      }
+
+      function resetFilters() {
+        state.region = '';
+        state.theme = '';
+        state.source = '';
+        state.query = '';
+        $('#region-filter').value = '';
+        $('#theme-filter').value = '';
+        $('#source-filter').value = '';
+        $('#search-input').value = '';
+        renderAll();
+      }
+
+      function applyFilter(type, value) {
+        if (type === 'region') {
+          state.region = value;
+          $('#region-filter').value = value;
+        }
+        if (type === 'theme') {
+          state.theme = value;
+          $('#theme-filter').value = value;
+        }
+        if (type === 'source') {
+          state.source = value;
+          $('#source-filter').value = value;
+        }
+        renderAll();
+        document.querySelector('.filter-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function renderStatus() {
+        const hasDates = unique(baseEvents.map(e => e.publication_date).filter(Boolean)).sort();
+        const range = hasDates.length ? `${formatDate(hasDates[0])} — ${formatDate(hasDates[hasDates.length - 1])}` : 'даты не указаны';
+        $('#data-status').innerHTML = `
+          <span class="small-badge muted">загружено событий: ${baseEvents.length}</span>
+          <span class="small-badge muted">период публикаций: ${range}</span>
+        `;
+      }
+
+      function renderKpis(events) {
+        const regions = unique(events.map(e => e.region));
+        const themes = unique(events.map(e => e.theme_group));
+        const sources = unique(events.flatMap(e => splitSources(e.source)));
+        const persons = unique(events
+          .filter(isPersonMonthPublic)
+          .flatMap(e => e.person_names));
+
+        $('#kpi-events').textContent = events.length;
+        $('#kpi-regions').textContent = regions.length;
+        $('#kpi-themes').textContent = themes.length;
+        $('#kpi-sources').textContent = sources.length;
+        $('#kpi-persons').textContent = persons.length;
+      }
+
+      function renderThemePulse(events) {
+        const container = $('#theme-pulse');
+        const total = sum(events.map(e => e.weight));
+        $('#theme-total-label').textContent = `${total} событий`;
+        const entries = sortEntries(groupCount(events, e => e.theme_group));
+        if (!entries.length) {
+          container.innerHTML = '<div class="empty">Нет данных для выбранных фильтров.</div>';
+          return;
+        }
+        const max = Math.max(...entries.map(([, count]) => count));
+        container.innerHTML = entries.map(([theme, count]) => {
+          const pct = total ? Math.round(count / total * 100) : 0;
+          const width = max ? Math.max(4, count / max * 100) : 0;
+          const color = themeColor(theme);
+          return `
+            <button type="button" class="bar-row" data-theme-click="${escapeAttr(theme)}" title="Фильтр по теме">
+              <span class="bar-label"><span class="dot" style="background:${color}"></span>${escapeHtml(theme)}</span>
+              <span class="bar-track"><span class="bar-fill" style="width:${width}%; background:${color}"></span></span>
+              <span class="bar-num">${count} · ${pct}%</span>
+            </button>
+          `;
+        }).join('');
+        $$('[data-theme-click]').forEach(el => el.addEventListener('click', () => applyFilter('theme', el.dataset.themeClick)));
+      }
+
+      function renderTimeline(events) {
+        const container = $('#timeline');
+        const topics = ['Пытки', 'Протесты', 'Права женщин'];
+        const timelineEvents = events.filter(e => topics.includes(e.timeline_topic));
+        if (!timelineEvents.length) {
+          container.innerHTML = '<div class="empty">Нет событий по трём темам в текущей выборке.</div>';
+          return;
+        }
+
+        const weeks = unique(timelineEvents.map(e => startOfWeek(e.publication_date || e.event_date)).filter(Boolean)).sort();
+        const counts = new Map();
+        for (const week of weeks) {
+          for (const topic of topics) counts.set(`${week}|||${topic}`, 0);
+        }
+        for (const event of timelineEvents) {
+          const week = startOfWeek(event.publication_date || event.event_date);
+          const key = `${week}|||${event.timeline_topic}`;
+          counts.set(key, (counts.get(key) || 0) + event.weight);
+        }
+        const maxCount = Math.max(1, ...Array.from(counts.values()));
+
+        const w = 920, h = 310;
+        const left = 126, right = 36, top = 34, rowGap = 72, plotH = 48;
+        const innerW = w - left - right;
+        const xFor = (week, i) => weeks.length === 1 ? left + innerW / 2 : left + (i / (weeks.length - 1)) * innerW;
+
+        let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Линия времени по темам">
+          <rect width="${w}" height="${h}" fill="rgba(255,255,255,.24)" />
+          <text x="${left}" y="20" font-size="11" fill="#666">Недели публикаций</text>`;
+
+        weeks.forEach((week, i) => {
+          const x = xFor(week, i);
+          svg += `<line x1="${x}" y1="28" x2="${x}" y2="${h - 42}" stroke="rgba(0,0,0,.08)" />
+                  <text x="${x}" y="${h - 18}" text-anchor="middle" font-size="10" fill="#666">${formatDate(week).slice(0,5)}</text>`;
+        });
+
+        topics.forEach((topic, row) => {
+          const baseY = top + row * rowGap + plotH;
+          const color = topicPalette[topic];
+          svg += `<text x="16" y="${baseY - 18}" font-size="13" font-weight="800" fill="#222">${escapeHtml(topic)}</text>
+                  <line x1="${left}" y1="${baseY}" x2="${w - right}" y2="${baseY}" stroke="rgba(0,0,0,.20)" stroke-width="1" />`;
+          const points = weeks.map((week, i) => {
+            const count = counts.get(`${week}|||${topic}`) || 0;
+            const x = xFor(week, i);
+            const y = baseY - (count / maxCount) * plotH;
+            return { week, count, x, y };
+          });
+          const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+          svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />`;
+          points.forEach(p => {
+            const r = p.count ? 5 : 3;
+            svg += `<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${p.count ? color : '#bbb'}" stroke="#fff" stroke-width="1.5">
+                      <title>${escapeHtml(topic)} · ${formatDate(p.week)} · ${p.count}</title>
+                    </circle>`;
+            if (p.count) svg += `<text x="${p.x}" y="${p.y - 9}" text-anchor="middle" font-size="10" font-weight="800" fill="${color}">${p.count}</text>`;
+          });
+        });
+        svg += '</svg>';
+        container.innerHTML = svg;
+      }
+
+      function renderRose(events) {
+        const container = $('#rose');
+        const legend = $('#rose-legend');
+        const regionTotals = groupCount(events, e => e.region);
+        const regions = sortEntries(regionTotals);
+        const themeTotals = sortEntries(groupCount(events, e => e.theme_group));
+        const total = sum(events.map(e => e.weight));
+
+        legend.innerHTML = themeTotals.map(([theme]) => `
+          <button type="button" data-theme-click="${escapeAttr(theme)}"><span class="dot" style="background:${themeColor(theme)}"></span>${escapeHtml(theme)}</button>
+        `).join('');
+        legend.querySelectorAll('[data-theme-click]').forEach(el => el.addEventListener('click', () => applyFilter('theme', el.dataset.themeClick)));
+
+        if (!regions.length) {
+          container.innerHTML = '<div class="empty">Нет данных для карты-розы.</div>';
+          return;
+        }
+
+        const w = 940, h = 720, cx = 470, cy = 350;
+        const innerR = 96, startR = 138, endR = 276, labelR = 330;
+        const ringRadii = [110, 150, 190, 230, 270];
+
+        let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Карта-роза регионов">
+          <rect width="${w}" height="${h}" fill="rgba(255,255,255,.18)" />`;
+        ringRadii.forEach((r, i) => {
+          svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${i % 2 ? 'rgba(255,255,255,.72)' : 'rgba(0,0,0,.06)'}" stroke-width="${i % 2 ? 18 : 1}" />`;
+        });
+        svg += `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#bdbdbd" stroke="rgba(0,0,0,.12)" />
+          <text x="${cx}" y="${cy - 18}" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">открытые источники</text>
+          <text x="${cx}" y="${cy + 10}" text-anchor="middle" font-size="42" font-weight="900" fill="#fff">${total}</text>
+          <text x="${cx}" y="${cy + 34}" text-anchor="middle" font-size="12" fill="#fff">событий</text>`;
+
+        regions.forEach(([region, totalRegion], i) => {
+          const angle = -Math.PI / 2 + (Math.PI * 2 * i / regions.length);
+          const cos = Math.cos(angle), sin = Math.sin(angle);
+          const x1 = cx + cos * innerR;
+          const y1 = cy + sin * innerR;
+          const x2 = cx + cos * endR;
+          const y2 = cy + sin * endR;
+          const lx = cx + cos * labelR;
+          const ly = cy + sin * labelR;
+          const anchor = Math.abs(cos) < .22 ? 'middle' : (cos > 0 ? 'start' : 'end');
+          const labelDx = cos > .22 ? 10 : (cos < -.22 ? -10 : 0);
+
+          const byTheme = new Map();
+          events.filter(e => e.region === region).forEach(e => byTheme.set(e.theme_group, (byTheme.get(e.theme_group) || 0) + e.weight));
+          const themeEntries = sortEntries(byTheme);
+
+          svg += `<g class="rose-region" data-region-click="${escapeAttr(region)}" style="cursor:pointer">
+            <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(0,0,0,.28)" stroke-width="1.2" />`;
+
+          let currentR = startR;
+          const gap = 4;
+          for (const [theme, count] of themeEntries) {
+            const length = Math.max(14, (endR - startR - gap * themeEntries.length) * count / totalRegion);
+            const sx1 = cx + cos * currentR;
+            const sy1 = cy + sin * currentR;
+            const sx2 = cx + cos * Math.min(endR, currentR + length);
+            const sy2 = cy + sin * Math.min(endR, currentR + length);
+            svg += `<line x1="${sx1}" y1="${sy1}" x2="${sx2}" y2="${sy2}" stroke="${themeColor(theme)}" stroke-width="9" stroke-linecap="round">
+              <title>${escapeHtml(region)} · ${escapeHtml(theme)} · ${count}</title>
+            </line>`;
+            currentR += length + gap;
+          }
+
+          svg += `<circle cx="${x2}" cy="${y2}" r="12" fill="#1d1d1d" stroke="#fff" stroke-width="2" />
+            <text x="${x2}" y="${y2 + 4}" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">${totalRegion}</text>
+            <text x="${lx + labelDx}" y="${ly - 6}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="#2b2b2b">${escapeHtml(region)}</text>
+            <text x="${lx + labelDx}" y="${ly + 11}" text-anchor="${anchor}" font-size="10" fill="#666">${totalRegion} событий</text>
+          </g>`;
+        });
+
+        svg += '</svg>';
+        container.innerHTML = svg;
+        container.querySelectorAll('[data-region-click]').forEach(el => el.addEventListener('click', () => applyFilter('region', el.dataset.regionClick)));
+      }
+
+      function renderMatrix(events) {
+        const container = $('#matrix');
+        const regionTotals = sortEntries(groupCount(events, e => e.region));
+        const themeTotals = sortEntries(groupCount(events, e => e.theme_group));
+        if (!regionTotals.length || !themeTotals.length) {
+          container.innerHTML = '<div class="empty">Нет данных для матрицы.</div>';
+          return;
+        }
+        const regions = regionTotals.map(([r]) => r);
+        const themes = themeTotals.map(([t]) => t);
+        const cellMap = new Map();
+        for (const event of events) {
+          const key = `${event.region}|||${event.theme_group}`;
+          cellMap.set(key, (cellMap.get(key) || 0) + event.weight);
+        }
+        const max = Math.max(1, ...Array.from(cellMap.values()));
+        let html = '<table class="matrix-table"><thead><tr><th>Регион</th>';
+        for (const theme of themes) {
+          html += `<th><button type="button" data-theme-click="${escapeAttr(theme)}" title="Фильтр по теме">${escapeHtml(theme)}</button></th>`;
+        }
+        html += '</tr></thead><tbody>';
+        for (const region of regions) {
+          html += `<tr><td class="region-cell"><button type="button" data-region-click="${escapeAttr(region)}">${escapeHtml(region)}</button></td>`;
+          for (const theme of themes) {
+            const v = cellMap.get(`${region}|||${theme}`) || 0;
+            const alpha = v ? (0.12 + 0.68 * v / max) : 0.03;
+            const style = `background-color:${hexToRgba(themeColor(theme), alpha)}`;
+            html += `<td style="${style}" class="${v ? '' : 'matrix-zero'}">${v || '·'}</td>`;
+          }
+          html += '</tr>';
+        }
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        container.querySelectorAll('[data-region-click]').forEach(el => el.addEventListener('click', () => applyFilter('region', el.dataset.regionClick)));
+        container.querySelectorAll('[data-theme-click]').forEach(el => el.addEventListener('click', () => applyFilter('theme', el.dataset.themeClick)));
+      }
+
+      function renderSources(events) {
+        const container = $('#sources');
+        const map = new Map();
+        for (const event of events) {
+          for (const source of splitSources(event.source)) {
+            if (!map.has(source)) map.set(source, { count: 0, roles: new Map(), official: 0, verify: 0, sensitive: 0 });
+            const item = map.get(source);
+            item.count += 1;
+            const role = event.source_role || 'не указано';
+            item.roles.set(role, (item.roles.get(role) || 0) + 1);
+            if (isOfficial(event)) item.official += 1;
+            if (needsVerification(event)) item.verify += 1;
+            if (isSensitive(event)) item.sensitive += 1;
+          }
+        }
+        const entries = Array.from(map.entries()).sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0], 'ru'));
+        if (!entries.length) {
+          container.innerHTML = '<div class="empty">Нет источников для выбранных фильтров.</div>';
+          return;
+        }
+        const max = Math.max(...entries.map(([, item]) => item.count));
+        container.innerHTML = entries.map(([source, item]) => {
+          const width = max ? item.count / max * 100 : 0;
+          const roleHtml = Array.from(item.roles.entries()).map(([role, count]) => roleBadge(role, count)).join('');
+          const flags = [
+            item.official ? `<span class="small-badge official">официальных: ${item.official}</span>` : '',
+            item.verify ? `<span class="small-badge verify">требуют проверки: ${item.verify}</span>` : '',
+            item.sensitive ? `<span class="small-badge sensitive">чувствительных: ${item.sensitive}</span>` : ''
+          ].join('');
+          return `
+            <div class="source-row" data-source-click="${escapeAttr(source)}" title="Фильтр по источнику">
+              <div class="source-name">${escapeHtml(source)}</div>
+              <div class="source-track"><div class="source-fill" style="width:${width}%"></div></div>
+              <div class="source-meta"><span class="small-badge muted">${item.count}</span>${roleHtml}${flags}</div>
+            </div>
+          `;
+        }).join('');
+        container.querySelectorAll('[data-source-click]').forEach(el => el.addEventListener('click', () => applyFilter('source', el.dataset.sourceClick)));
+      }
+
+      function renderPeople(events) {
+        const container = $('#people');
+        const seen = new Set();
+        const cards = [];
+        for (const event of events) {
+          if (!isPersonMonthPublic(event)) continue;
+          for (const name of event.person_names) {
+            const key = lower(name);
+            if (seen.has(key)) continue;
+            seen.add(key);
+            const roles = event.person_roles.length ? event.person_roles.join(', ') : 'роль не указана';
+            cards.push(`
+              <article class="person-card">
+                <div class="person-name">${escapeHtml(name)}</div>
+                <div class="person-meta">${escapeHtml(roles)} · ${escapeHtml(event.region)} · ${escapeHtml(event.theme_group)}</div>
+                <p class="person-event">${safeText(event, event.what_happened)}</p>
+                <div class="status-row">${statusBadges(event)}</div>
+              </article>
+            `);
+          }
+        }
+        container.innerHTML = cards.length ? cards.join('') : '<div class="empty">В текущей выборке нет персон, которые можно безопасно вынести в публичный блок.</div>';
+      }
+
+      function renderTable(events) {
+        const tbody = $('#events-tbody');
+        const sorted = events.slice().sort((a, b) => (b.publication_date || '').localeCompare(a.publication_date || '') || (b.event_date || '').localeCompare(a.event_date || ''));
+        $('#table-count').textContent = `${sorted.length} строк`;
+        if (!sorted.length) {
+          tbody.innerHTML = '<tr><td colspan="8"><div class="empty">Нет строк для выбранных фильтров.</div></td></tr>';
+          return;
+        }
+        tbody.innerHTML = sorted.map(event => {
+          const region = [event.region, event.secondary_region].filter(Boolean).join(' / ');
+          const color = themeColor(event);
+          const sourceNames = splitSources(event.source).join('; ');
+          const url = event.url || '#';
+          const link = event.url ? `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">открыть ↗</a>` : '—';
+          return `
+            <tr>
+              <td><strong>${escapeHtml(region)}</strong><br><span class="small-badge muted">${escapeHtml(event.macroregion)}</span></td>
+              <td class="date-cell">${escapeHtml(formatDate(event.event_date))}</td>
+              <td class="date-cell">${escapeHtml(formatDate(event.publication_date))}</td>
+              <td><span class="theme-pill"><span class="dot" style="background:${color}"></span>${escapeHtml(event.theme_group)}</span><br><span class="section-note">${escapeHtml(event.theme_primary || '')}</span></td>
+              <td class="event-text">${safeText(event, event.what_happened)}<div class="status-row">${statusBadges(event)}</div></td>
+              <td class="affected-cell">${escapeHtml(safeAffected(event))}</td>
+              <td>${escapeHtml(sourceNames)}<br><span class="small-badge muted">${escapeHtml(roleLabels[event.source_role] || event.source_role || 'роль не указана')}</span></td>
+              <td class="link-cell">${link}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function renderAll() {
+        const events = getFilteredEvents();
+        renderKpis(events);
+        renderThemePulse(events);
+        renderTimeline(events);
+        renderRose(events);
+        renderMatrix(events);
+        renderSources(events);
+        renderPeople(events);
+        renderTable(events);
+      }
+
+      function showError(message) {
+        const page = document.querySelector('.page');
+        page.insertAdjacentHTML('afterbegin', `<div class="error"><strong>Ошибка данных.</strong> ${escapeHtml(message)}</div>`);
+      }
+
+      function init() {
+        try {
+          const dataElement = document.getElementById('events-data');
+          rawEvents = JSON.parse(dataElement.textContent);
+          if (!Array.isArray(rawEvents)) throw new Error('JSON должен быть массивом событий.');
+        } catch (error) {
+          showError(error.message || 'Не удалось прочитать JSON.');
+          return;
+        }
+
+        baseEvents = prepareEvents(rawEvents);
+        if (!baseEvents.length) {
+          showError('В JSON нет событий с weight = 1 или dashboard_include = «да».');
+          return;
+        }
+        buildThemeColorMap(baseEvents);
+        initFilters();
+        renderStatus();
+        renderAll();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
